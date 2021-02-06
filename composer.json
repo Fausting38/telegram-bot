@@ -1,0 +1,6 @@
+{
+    "require": {
+        "ext-json": "*",
+        "longman/telegram-bot": "^0.70.1"
+    }
+}
