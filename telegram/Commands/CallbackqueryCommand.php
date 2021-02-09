@@ -46,7 +46,7 @@ class CallbackqueryCommand extends UserCommand
 
         switch ($dataArr[0]) {
             case '/docs':
-                return $this->getDocs($callback_query, $dataArr);
+                return $this->generalDocs($callback_query, $dataArr);
 
             default:
                 return $callback_query->answer(
@@ -58,32 +58,18 @@ class CallbackqueryCommand extends UserCommand
         }
     }
 
-    private function getDocs(object $callback_query, array $dataArr = [])
-    {
-        $id = !isset($dataArr[1]) ? 0 : (int)$dataArr[1];
-
-        return $this->generalDocs($callback_query, $id);
-    }
-
     /**
      * Коллбэк на возвращение доков
      *
      * @param object $callback_query
-     * @param int    $id
+     * @param array  $dataArr
      * @return ServerResponse
      * @throws selectorException
      */
-    private function generalDocs(object $callback_query, int $id): ServerResponse
+    private function generalDocs(object $callback_query, array $dataArr = []): ServerResponse
     {
-//        return Request::editMessageText(
-//            [
-//                'chat_id' => $callback_query->getFrom()->getId(),
-//                'message_id' => $callback_query->getMessage()->getMessageId(),
-//                'text' => Docs::getDocs($id)
-//                    . "\n\nВаше обращение зарегистрировано под номером \n№{$callback_query->getId()}",
-//                'reply_markup' => Docs::getInlineKeyboard(),
-//            ]
-//        );
+        $id = !isset($dataArr[1]) ? 0 : (int)$dataArr[1];
+
         $docs = Docs::getDocs($id);
 
         return Request::editMessageText(

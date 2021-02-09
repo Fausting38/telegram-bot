@@ -13,5 +13,5 @@ return [
         'paths' => [
             __DIR__ . '/Commands/',
         ]
-    ]
+    ],
 ];
