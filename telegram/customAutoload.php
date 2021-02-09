@@ -1,4 +1,7 @@
 <?php
+/**
+ * Кастомный автозагрузчик классов
+ */
 
 spl_autoload_register(
     function ($class)  {

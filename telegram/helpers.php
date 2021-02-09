@@ -1,4 +1,7 @@
 <?php
+/**
+ * Хелперы для бота
+ */
 
 if (!function_exists('writeTelegramLog')) {
     function writeTelegramLog($message): void

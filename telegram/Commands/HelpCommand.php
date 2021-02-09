@@ -3,11 +3,9 @@
 namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Fenris\Bot\Docs;
-use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\UserCommand;
-use Longman\TelegramBot\Entities\InlineKeyboard;
-use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * Справочная команда
@@ -26,6 +24,12 @@ class HelpCommand extends UserCommand
 
     protected $private_only = false;
 
+    /**
+     * Исполняющий метод
+     *
+     * @return ServerResponse
+     * @throws TelegramException
+     */
     public function execute(): ServerResponse
     {
         return $this->replyToChat(

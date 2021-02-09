@@ -2,11 +2,18 @@
 
 namespace Longman\TelegramBot\Commands\UserCommand;
 
+use Exception;
 use Fenris\Bot\Docs;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
+use selectorException;
 
+/**
+ * Обработка команд содержащих коллбэк
+ *
+ * @package Longman\TelegramBot\Commands\UserCommand
+ */
 class CallbackqueryCommand extends UserCommand
 {
     /**
@@ -22,22 +29,25 @@ class CallbackqueryCommand extends UserCommand
     /**
      * @var string
      */
-    protected $version = '1.2.0';
+    protected $version = '0';
 
     /**
-     * Main command execution
+     * Исполняющий метод
      *
      * @return ServerResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(): ServerResponse
     {
         $callback_query = $this->getCallbackQuery();
         $callback_data = $callback_query->getData();
 
-        switch ($callback_data) {
+        $dataArr = explode(' ', $callback_data);
+
+        switch ($dataArr[0]) {
             case '/docs':
-                return $this->docs($callback_query);
+                return $this->getDocs($callback_query, $dataArr);
+
             default:
                 return $callback_query->answer(
                     [
@@ -48,20 +58,41 @@ class CallbackqueryCommand extends UserCommand
         }
     }
 
+    private function getDocs(object $callback_query, array $dataArr = [])
+    {
+        $id = !isset($dataArr[1]) ? 0 : (int)$dataArr[1];
+
+        return $this->generalDocs($callback_query, $id);
+    }
+
     /**
      * Коллбэк на возвращение доков
      *
-     * @param $callback_query
+     * @param object $callback_query
+     * @param int    $id
      * @return ServerResponse
+     * @throws selectorException
      */
-    private function docs($callback_query)
+    private function generalDocs(object $callback_query, int $id): ServerResponse
     {
+//        return Request::editMessageText(
+//            [
+//                'chat_id' => $callback_query->getFrom()->getId(),
+//                'message_id' => $callback_query->getMessage()->getMessageId(),
+//                'text' => Docs::getDocs($id)
+//                    . "\n\nВаше обращение зарегистрировано под номером \n№{$callback_query->getId()}",
+//                'reply_markup' => Docs::getInlineKeyboard(),
+//            ]
+//        );
+        $docs = Docs::getDocs($id);
+
         return Request::editMessageText(
             [
                 'chat_id' => $callback_query->getFrom()->getId(),
                 'message_id' => $callback_query->getMessage()->getMessageId(),
-                'text' => Docs::getDocs() . "\n\nВаше обращение зарегистрировано под номером \n№{$callback_query->getId()}",
-                'reply_markup' => Docs::getInlineKeyboard()
+                'text' => $docs['text'],
+                'reply_markup' => $docs['reply_markup'],
+                'parse_mode' => 'Markdown'
             ]
         );
     }

@@ -2,10 +2,10 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommand;
 
+use Fenris\Bot\Help;
 use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Commands\UserCommand;
-use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\TelegramException;
 
 /**
  * Стартовая команда
@@ -24,18 +24,19 @@ class StartCommand extends SystemCommand
 
     protected $private_only = false;
 
+    /**
+     * Исполняющий метод
+     *
+     * @return ServerResponse
+     * @throws TelegramException
+     */
     public function execute(): ServerResponse
     {
         $message = $this->getMessage();
 
-        $keyboard = new Keyboard([['text' => '/help']]);
-
-        $keyboard->setOneTimeKeyboard(true)
-            ->setResizeKeyboard(true);
-
         return $this->replyToChat(
             "Привет, {$message->getFrom()->getFirstName()}! \nЯ - бот помощник. Напиши мне /help, чтобы узнать, что я умею.",
-            ['reply_markup' => $keyboard]
+            ['reply_markup' => Help::getHelpBtn()]
         );
     }
 }

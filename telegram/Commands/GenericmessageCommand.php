@@ -1,44 +1,20 @@
 <?php
 
-namespace Longman\TelegramBot\Commands\UserCommand;
+namespace Longman\TelegramBot\Commands\SystemCommand;
 
 use Fenris\Bot\Help;
-use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
+use Longman\TelegramBot\Telegram;
 
-/**
- * Обработка любой ненайденной команды
- *
- * @package Longman\TelegramBot\Commands\UserCommand
- */
-class GenericCommand extends UserCommand
+class GenericmessageCommand extends SystemCommand
 {
-    /**
-     * @var string
-     */
-    protected $name = 'generic';
+    protected $name = Telegram::GENERIC_MESSAGE_COMMAND;
 
-    /**
-     * @var string
-     */
-    protected $description = 'Handles generic commands or is executed by default when a command is not found';
+    protected $description = 'Handle generic message';
 
-    /**
-     * @var string
-     */
     protected $version = '0';
-
-    /**
-     * Исполняющий метод
-     *
-     * @return ServerResponse
-     * @throws TelegramException
-     */
-    public function execute(): ServerResponse
-    {
-        return $this->generalAnswer();
-    }
 
     /**
      * Исполняющий метод
@@ -52,7 +28,18 @@ class GenericCommand extends UserCommand
     }
 
     /**
-     * Общий ответ для методов
+     * Исполняющий метод
+     *
+     * @return ServerResponse
+     * @throws TelegramException
+     */
+    public function execute(): ServerResponse
+    {
+        return $this->generalAnswer();
+    }
+
+    /**
+     * Общий метод ответа
      *
      * @return ServerResponse
      * @throws TelegramException
@@ -60,7 +47,7 @@ class GenericCommand extends UserCommand
     private function generalAnswer(): ServerResponse
     {
         return $this->replyToChat(
-            "Команда не найдена 😢 \nОбратитесь к справке /help",
+            "Команды начинаются с символа слэш - / \nЧтобы увидеть списко доступных команды перейдите в раздел помощи",
             ['reply_markup' => Help::getHelpBtn()]
         );
     }
